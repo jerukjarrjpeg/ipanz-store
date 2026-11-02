@@ -1,0 +1,40 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+  body {
+    @apply bg-brand-bg font-sans text-ink antialiased;
+    letter-spacing: -0.011em;
+  }
+  h1, h2, h3 { letter-spacing: -0.025em; }
+  :focus-visible { @apply outline-none ring-4 ring-brand-green/25; }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+  }
+}
+
+@layer components {
+  .btn, .btn-primary, .btn-secondary, .btn-danger, .btn-whatsapp {
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold
+           transition duration-200 active:scale-[0.97] disabled:pointer-events-none disabled:opacity-50;
+  }
+  .btn-primary   { @apply bg-brand-green text-white shadow-soft hover:bg-brand-greenDark; }
+  .btn-whatsapp  { @apply bg-[#1FA855] text-white shadow-soft hover:bg-[#188a45]; }
+  .btn-secondary { @apply bg-white text-ink ring-1 ring-black/10 hover:bg-black/[0.04]; }
+  .btn-danger    { @apply bg-brand-redSoft text-brand-red hover:bg-brand-red hover:text-white; }
+  .btn-lg { @apply px-7 py-3.5 text-base; }
+
+  .input {
+    @apply w-full rounded-2xl border border-black/10 bg-white px-4 py-3 text-[15px] text-ink
+           placeholder:text-ink-mute/70 transition focus:border-brand-green focus:outline-none focus:ring-4 focus:ring-brand-green/15;
+  }
+  .label { @apply mb-1.5 block text-sm font-medium text-ink; }
+  .card { @apply rounded-3xl bg-white shadow-soft; }
+  .chip {
+    @apply inline-flex items-center rounded-full bg-white px-4 py-2 text-sm font-medium text-ink ring-1 ring-black/10
+           transition hover:bg-black/[0.04];
+  }
+  .chip-active { @apply bg-ink text-white ring-ink hover:bg-ink; }
+}
