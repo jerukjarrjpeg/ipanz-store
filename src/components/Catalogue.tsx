@@ -2,12 +2,14 @@
 
 import { useMemo, useState } from "react";
 import type { Category, Product } from "@/lib/types";
+import { useLanguage } from "@/lib/i18n";
 import ProductCard from "./ProductCard";
 import { BoxIcon, SearchIcon } from "./Icons";
 
 type Sort = "new" | "price-asc" | "price-desc" | "name";
 
 export default function Catalogue({ products, categories }: { products: Product[]; categories: Category[] }) {
+  const { t } = useLanguage();
   const [q, setQ] = useState("");
   const [cat, setCat] = useState("all");
   const [sort, setSort] = useState<Sort>("new");
@@ -39,8 +41,8 @@ export default function Catalogue({ products, categories }: { products: Product[
     return (
       <div className="card mt-6 flex flex-col items-center px-6 py-16 text-center">
         <BoxIcon className="h-14 w-14 text-ink-mute/40" />
-        <h3 className="mt-4 text-xl font-bold">The shelves are being stocked</h3>
-        <p className="mt-1 max-w-sm text-ink-mute">No products are listed yet. Please check back soon, or message us on WhatsApp to ask what’s available.</p>
+        <h3 className="mt-4 text-xl font-bold">{t.emptyProductsTitle}</h3>
+        <p className="mt-1 max-w-sm text-ink-mute">{t.emptyProductsDesc}</p>
       </div>
     );
   }
@@ -54,28 +56,28 @@ export default function Catalogue({ products, categories }: { products: Product[
             type="search"
             value={q}
             onChange={(e) => setQ(e.target.value)}
-            placeholder="Search products"
-            aria-label="Search products"
+            placeholder={t.searchPlaceholder}
+            aria-label={t.searchAria}
             className="input pl-11"
           />
         </div>
         <div className="flex items-center gap-2">
-          <select value={sort} onChange={(e) => setSort(e.target.value as Sort)} aria-label="Sort products" className="input w-auto pr-8">
-            <option value="new">Newest</option>
-            <option value="price-asc">Price: low to high</option>
-            <option value="price-desc">Price: high to low</option>
-            <option value="name">Name</option>
+          <select value={sort} onChange={(e) => setSort(e.target.value as Sort)} aria-label={t.sortAria} className="input w-auto pr-8">
+            <option value="new">{t.sortNew}</option>
+            <option value="price-asc">{t.sortPriceAsc}</option>
+            <option value="price-desc">{t.sortPriceDesc}</option>
+            <option value="name">{t.sortName}</option>
           </select>
           <label className="chip cursor-pointer select-none gap-2 whitespace-nowrap">
             <input type="checkbox" checked={inStockOnly} onChange={(e) => setInStockOnly(e.target.checked)} className="accent-[#0A8A4A]" />
-            In stock
+            {t.inStockOnly}
           </label>
         </div>
       </div>
 
       {usedCategories.length > 0 && (
-        <div className="-mx-4 mt-4 flex gap-2 overflow-x-auto px-4 pb-1 sm:mx-0 sm:flex-wrap sm:px-0" role="tablist" aria-label="Categories">
-          <button className={`chip shrink-0 ${cat === "all" ? "chip-active" : ""}`} onClick={() => setCat("all")}>All</button>
+        <div className="-mx-4 mt-4 flex gap-2 overflow-x-auto px-4 pb-1 sm:mx-0 sm:flex-wrap sm:px-0" role="tablist" aria-label={t.categoriesAria}>
+          <button className={`chip shrink-0 ${cat === "all" ? "chip-active" : ""}`} onClick={() => setCat("all")}>{t.allCategories}</button>
           {usedCategories.map((c) => (
             <button key={c.id} className={`chip shrink-0 ${cat === c.id ? "chip-active" : ""}`} onClick={() => setCat(c.id)}>
               {c.name}
@@ -86,10 +88,10 @@ export default function Catalogue({ products, categories }: { products: Product[
 
       {list.length === 0 ? (
         <div className="card mt-6 px-6 py-14 text-center">
-          <h3 className="text-lg font-bold">Nothing matches your search</h3>
-          <p className="mt-1 text-ink-mute">Try a different word or clear the filters.</p>
+          <h3 className="text-lg font-bold">{t.noMatchesTitle}</h3>
+          <p className="mt-1 text-ink-mute">{t.noMatchesDesc}</p>
           <button className="btn-secondary mt-5" onClick={() => { setQ(""); setCat("all"); setInStockOnly(false); }}>
-            Clear filters
+            {t.clearFilters}
           </button>
         </div>
       ) : (
