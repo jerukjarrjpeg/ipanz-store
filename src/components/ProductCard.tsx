@@ -5,12 +5,14 @@ import { useState } from "react";
 import type { Product } from "@/lib/types";
 import { rm } from "@/lib/format";
 import { useCart } from "@/lib/cart";
+import { useLanguage } from "@/lib/i18n";
 import ProductImage from "./ProductImage";
 import AvailabilityBadge from "./AvailabilityBadge";
 import { CheckIcon, PlusIcon } from "./Icons";
 
 export default function ProductCard({ product, categoryName }: { product: Product; categoryName?: string }) {
   const { add, lines } = useCart();
+  const { t } = useLanguage();
   const [justAdded, setJustAdded] = useState(false);
   const soldOut = product.stock <= 0;
   const inCart = lines.find((l) => l.productId === product.id)?.qty ?? 0;
@@ -24,7 +26,7 @@ export default function ProductCard({ product, categoryName }: { product: Produc
 
   return (
     <article className="group card flex flex-col overflow-hidden transition duration-300 hover:-translate-y-1 hover:shadow-lift">
-      <Link href={`/product/${product.id}`} className="block" aria-label={`View ${product.name}`}>
+      <Link href={`/product/${product.id}`} className="block" aria-label={t.viewProductAria(product.name)}>
         <ProductImage path={product.image_path} alt={product.name} className={`aspect-square ${soldOut ? "opacity-50" : ""}`} />
       </Link>
       <div className="flex flex-1 flex-col p-4">
@@ -36,12 +38,12 @@ export default function ProductCard({ product, categoryName }: { product: Produc
         <div className="mt-auto flex items-end justify-between gap-2 pt-4">
           <div>
             <p className="text-lg font-bold leading-none">{rm(product.price)}</p>
-            <p className="mt-1 text-xs text-ink-mute">per {product.unit}</p>
+            <p className="mt-1 text-xs text-ink-mute">{t.perUnit(product.unit)}</p>
           </div>
           <button
             onClick={handleAdd}
             disabled={soldOut || atMax}
-            aria-label={`Add ${product.name} to cart`}
+            aria-label={t.addToCartAria(product.name)}
             className={`grid h-10 w-10 place-items-center rounded-full text-white shadow-soft transition duration-200 active:scale-90 disabled:opacity-40 ${
               justAdded ? "bg-brand-orange" : "bg-brand-green hover:bg-brand-greenDark"
             }`}

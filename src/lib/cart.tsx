@@ -132,15 +132,32 @@ export function CartProvider({ children }: { children: ReactNode }) {
     const byId = new Map<string, any>(data.map((p: any): [string, any] => [p.id, p]));
     const notices: string[] = [];
     const next: CartLine[] = [];
+    const isBm = typeof window !== "undefined" && localStorage.getItem("ipanz-lang") === "bm";
     for (const l of current) {
       const p = byId.get(l.productId);
       if (!p || !p.is_active || p.stock <= 0) {
-        notices.push(`"${l.name}" is no longer available and was removed from your cart.`);
+        notices.push(
+          isBm
+            ? `"${l.name}" tidak lagi tersedia dan telah dikeluarkan dari troli anda.`
+            : `"${l.name}" is no longer available and was removed from your cart.`
+        );
         continue;
       }
       const qty = Math.min(l.qty, p.stock, MAX_QTY);
-      if (qty < l.qty) notices.push(`Only ${p.stock} of "${p.name}" left, so the quantity was reduced.`);
-      if (Number(p.price) !== l.price) notices.push(`The price of "${p.name}" is now ${rm(Number(p.price))}.`);
+      if (qty < l.qty) {
+        notices.push(
+          isBm
+            ? `Hanya ${p.stock} unit "${p.name}" yang tinggal, jadi kuantiti telah dikurangkan.`
+            : `Only ${p.stock} of "${p.name}" left, so the quantity was reduced.`
+        );
+      }
+      if (Number(p.price) !== l.price) {
+        notices.push(
+          isBm
+            ? `Harga untuk "${p.name}" kini ${rm(Number(p.price))}.`
+            : `The price of "${p.name}" is now ${rm(Number(p.price))}.`
+        );
+      }
       next.push({
         productId: l.productId,
         name: p.name,
